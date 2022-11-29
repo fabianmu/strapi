@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import get from 'lodash/get';
 import { createArrayOfValues } from '../../../utils';
 
 /**
@@ -29,4 +29,5 @@ const formatActions = (actions, modifiedData, pathToData) => {
     };
   });
 };
+
 export default formatActions;

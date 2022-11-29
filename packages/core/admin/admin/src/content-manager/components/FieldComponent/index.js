@@ -1,7 +1,6 @@
 /* eslint-disable  import/no-cycle */
 import React, { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import size from 'lodash/size';
 import isEqual from 'react-fast-compare';
 import { useIntl } from 'react-intl';
 import { NotAllowedInput } from '@strapi/helper-plugin';
@@ -42,7 +41,7 @@ const FieldComponent = ({
   required,
 }) => {
   const { formatMessage } = useIntl();
-  const componentValueLength = size(componentValue);
+  const componentValueLength = componentValue.length;
   const isInitialized = componentValue !== null || isFromDynamicZone;
   const showResetComponent =
     !isRepeatable && isInitialized && !isFromDynamicZone && hasChildrenAllowedFields;

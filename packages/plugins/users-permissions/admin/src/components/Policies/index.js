@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl';
 import { Typography } from '@strapi/design-system/Typography';
 import { Stack } from '@strapi/design-system/Stack';
 import { GridItem } from '@strapi/design-system/Grid';
-import { get, isEmpty, without } from 'lodash';
+import without from 'lodash/without';
 import { useUsersPermissions } from '../../contexts/UsersPermissionsContext';
 import BoundRoute from '../BoundRoute';
 
@@ -12,12 +12,13 @@ const Policies = () => {
   const { selectedAction, routes } = useUsersPermissions();
 
   const path = without(selectedAction.split('.'), 'controllers');
-  const controllerRoutes = get(routes, path[0]);
+  const controllerRoutes = routes[path[0]];
   const pathResolved = path.slice(1).join('.');
 
-  const displayedRoutes = isEmpty(controllerRoutes)
-    ? []
-    : controllerRoutes.filter((o) => o.handler.endsWith(pathResolved));
+  const displayedRoutes =
+    controllerRoutes.length === 0
+      ? []
+      : controllerRoutes.filter((o) => o.handler.endsWith(pathResolved));
 
   return (
     <GridItem

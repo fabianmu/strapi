@@ -12,7 +12,6 @@ import {
   onRowClick,
   stopPropagation,
 } from '@strapi/helper-plugin';
-import has from 'lodash/has';
 import upperFirst from 'lodash/upperFirst';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { HeaderLayout, Layout, ContentLayout } from '@strapi/design-system/Layout';
@@ -106,7 +105,7 @@ export const ProvidersPage = () => {
 
     const providerToEdit = providers.find((obj) => obj.name === providerToEditName);
 
-    return has(providerToEdit, 'subdomain');
+    return !!providerToEdit?.subdomain;
   }, [providers, providerToEditName]);
 
   const pageTitle = formatMessage({

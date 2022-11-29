@@ -1,4 +1,4 @@
-import { isObject, has, omit } from 'lodash';
+import isObject from 'lodash/isObject';
 import { createArrayOfValues } from '../../utils';
 
 /**
@@ -10,14 +10,13 @@ const updateConditionsToFalse = (obj) => {
   return Object.keys(obj).reduce((acc, current) => {
     const currentValue = obj[current];
 
-    if (isObject(currentValue) && !has(currentValue, 'conditions')) {
+    if (isObject(currentValue) && !currentValue?.conditions) {
       return { ...acc, [current]: updateConditionsToFalse(currentValue) };
     }
 
-    if (isObject(currentValue) && has(currentValue, 'conditions')) {
-      const isActionEnabled = createArrayOfValues(omit(currentValue, 'conditions')).some(
-        (val) => val
-      );
+    if (isObject(currentValue) && currentValue?.conditions) {
+      const { conditions, ...values } = currentValue;
+      const isActionEnabled = createArrayOfValues(values).some((val) => val);
 
       if (!isActionEnabled) {
         const updatedConditions = Object.keys(currentValue.conditions).reduce((acc1, current) => {

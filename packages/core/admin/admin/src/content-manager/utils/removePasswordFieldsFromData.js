@@ -1,11 +1,10 @@
-import { get } from 'lodash';
 import { getType, getOtherInfos } from '@strapi/helper-plugin';
 
 const removePasswordFieldsFromData = (data, contentTypeSchema, componentSchema) => {
   const recursiveCleanData = (data, schema) => {
     return Object.keys(data).reduce((acc, current) => {
       const attrType = getType(schema, current);
-      const value = get(data, current);
+      const value = data[current];
       const component = getOtherInfos(schema, [current, 'component']);
       const isRepeatable = getOtherInfos(schema, [current, 'repeatable']);
 

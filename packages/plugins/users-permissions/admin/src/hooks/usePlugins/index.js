@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react';
 import { useNotification } from '@strapi/helper-plugin';
-import { get } from 'lodash';
+
 import init from './init';
 import pluginId from '../../pluginId';
 import { cleanPermissions } from '../../utils';
@@ -33,7 +33,7 @@ const usePlugins = (shouldFetchData = true) => {
         routes,
       });
     } catch (err) {
-      const message = get(err, ['response', 'payload', 'message'], 'An error occured');
+      const message = err?.response?.payload?.message ?? 'An error occured';
 
       dispatch({
         type: 'GET_DATA_ERROR',

@@ -1,4 +1,6 @@
-import { merge, get, isEmpty, set } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
+import merge from 'lodash/merge';
+import set from 'lodash/set';
 import findMatchingPermission from './findMatchingPermissions';
 /**
  * Creates the default condition form: { [conditionId]: false }
@@ -59,11 +61,8 @@ const createDefaultPropertiesForm = (propertiesArray, ctLayout, matchingPermissi
       const foundProperty = ctLayout.properties.find(({ value }) => value === currentPropertyName);
 
       if (foundProperty) {
-        const matchingPermissionPropertyValues = get(
-          matchingPermission,
-          ['properties', foundProperty.value],
-          []
-        );
+        const matchingPermissionPropertyValues =
+          matchingPermission?.properties?.[foundProperty.value] ?? [];
         const propertyForm = createDefaultPropertyForms(
           foundProperty,
           matchingPermissionPropertyValues
@@ -140,7 +139,7 @@ const createDefaultCTFormFromLayout = (
       const matchingPermission = findMatchingPermission(initialPermissions, actionId, currentCTUID);
       const conditionsForm = createDefaultConditionsForm(
         conditionArray,
-        get(matchingPermission, 'conditions', [])
+        matchingPermission?.conditions ?? []
       );
 
       if (isEmpty(applyToProperties) || doesNothaveProperty) {

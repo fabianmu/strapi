@@ -1,4 +1,3 @@
-import { get } from 'lodash';
 import { getCheckboxState, removeConditionKeyFromData } from '../../utils';
 
 const getActionsIds = (array) => array.map(({ actionId }) => actionId);
@@ -6,8 +5,7 @@ const getActionsIds = (array) => array.map(({ actionId }) => actionId);
 const getRelatedActionIdData = (actionIdArray, dataObj) => {
   return actionIdArray.reduce((acc, actionId) => {
     Object.keys(dataObj).forEach((ctUid) => {
-      const actionIdData = get(dataObj, [ctUid, actionId], {});
-
+      const actionIdData = dataObj?.[ctUid]?.[actionId] ?? {};
       const actionIdState = { [ctUid]: removeConditionKeyFromData(actionIdData) };
 
       if (!acc[actionId]) {

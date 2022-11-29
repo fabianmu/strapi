@@ -5,7 +5,6 @@ import { useDrag, useDrop } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 import styled from 'styled-components';
 import { useIntl } from 'react-intl';
-import toString from 'lodash/toString';
 import { Accordion, AccordionToggle, AccordionContent } from '@strapi/design-system/Accordion';
 import { Grid, GridItem } from '@strapi/design-system/Grid';
 import { Stack } from '@strapi/design-system/Stack';
@@ -174,7 +173,7 @@ const DraggedItem = ({
     dropRef: drop(dropRef),
   };
 
-  const accordionTitle = toString(displayedValue);
+  const accordionTitle = `${displayedValue}`;
   const accordionHasError = hasErrors ? 'error' : undefined;
 
   return (

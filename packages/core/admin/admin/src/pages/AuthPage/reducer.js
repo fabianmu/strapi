@@ -1,6 +1,7 @@
-import produce from 'immer';
-import { set } from 'lodash';
 /* eslint-disable consistent-return */
+
+import produce from 'immer';
+import set from 'lodash/set';
 
 const initialState = {
   formErrors: {},

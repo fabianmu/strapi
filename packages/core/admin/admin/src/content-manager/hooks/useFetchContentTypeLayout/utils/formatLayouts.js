@@ -1,4 +1,5 @@
-import { cloneDeep, get, set } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import set from 'lodash/set';
 import { mergeMetasWithSchema } from '../../../utils';
 
 const getRelationModel = (targetModel, models) => models.find((model) => model.uid === targetModel);
@@ -30,7 +31,7 @@ const createMetasSchema = (initialData, models) => {
 
   const formatMetadatas = (targetSchema) => {
     return Object.keys(targetSchema.metadatas).reduce((acc, current) => {
-      const schema = get(targetSchema, ['attributes', current], {});
+      const schema = targetSchema?.attributes?.[current] ?? {};
       let metadatas = targetSchema.metadatas[current];
 
       if (schema.type === 'relation') {
@@ -38,7 +39,7 @@ const createMetasSchema = (initialData, models) => {
         const mainFieldName = metadatas.edit.mainField;
         const mainField = {
           name: mainFieldName,
-          schema: get(relationModel, ['attributes', mainFieldName]),
+          schema: relationModel.attributes[mainFieldName],
         };
 
         metadatas = {
@@ -74,12 +75,12 @@ const createMetasSchema = (initialData, models) => {
 const formatLayoutWithMetas = (contentTypeConfiguration, models) =>
   contentTypeConfiguration.layouts.edit.reduce((acc, current) => {
     const row = current.map((attribute) => {
-      const fieldSchema = get(contentTypeConfiguration, ['attributes', attribute.name], {});
+      const fieldSchema = contentTypeConfiguration?.attributes?.[attribute.name] ?? {};
 
       const data = {
         ...attribute,
         fieldSchema,
-        metadatas: get(contentTypeConfiguration, ['metadatas', attribute.name, 'edit'], {}),
+        metadatas: contentTypeConfiguration?.metadatas?.[attribute.name]?.edit ?? {},
       };
 
       if (fieldSchema.type === 'relation') {
@@ -106,9 +107,8 @@ const formatLayoutWithMetas = (contentTypeConfiguration, models) =>
 
 const formatListLayoutWithMetas = (contentTypeConfiguration, components) => {
   const formatted = contentTypeConfiguration.layouts.list.reduce((acc, current) => {
-    const fieldSchema = get(contentTypeConfiguration, ['attributes', current], {});
-    const metadatas = get(contentTypeConfiguration, ['metadatas', current, 'list'], {});
-
+    const fieldSchema = contentTypeConfiguration?.attributes?.[current] ?? {};
+    const metadatas = contentTypeConfiguration?.metadatas?.[current]?.list ?? {};
     const type = fieldSchema.type;
 
     if (type === 'relation') {
@@ -147,7 +147,7 @@ const formatListLayoutWithMetas = (contentTypeConfiguration, components) => {
 };
 
 const shouldDisplayRelationLink = (contentTypeConfiguration, fieldName, models) => {
-  const targetModel = get(contentTypeConfiguration, ['attributes', fieldName, 'targetModel'], '');
+  const targetModel = contentTypeConfiguration?.attributes?.[fieldName]?.targetModel ?? '';
 
   return getDisplayedModels(models).includes(targetModel);
 };

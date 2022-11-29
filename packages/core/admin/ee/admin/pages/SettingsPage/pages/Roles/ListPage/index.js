@@ -19,7 +19,6 @@ import { VisuallyHidden } from '@strapi/design-system/VisuallyHidden';
 import { Main } from '@strapi/design-system/Main';
 import { Table, Tbody, TFooter, Thead, Th, Tr } from '@strapi/design-system/Table';
 import { Typography } from '@strapi/design-system/Typography';
-import { get } from 'lodash';
 import matchSorter from 'match-sorter';
 import { useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
@@ -88,7 +87,7 @@ const useRoleActions = ({ getData, canCreate, canDelete, canUpdate }) => {
         type: 'RESET_DATA_TO_DELETE',
       });
     } catch (err) {
-      const errorIds = get(err, ['response', 'payload', 'data', 'ids'], null);
+      const errorIds = err?.response?.payload?.data?.ids ?? null;
 
       if (errorIds && Array.isArray(errorIds)) {
         const errorsMsg = errorIds.join('\n');

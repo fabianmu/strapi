@@ -1,8 +1,6 @@
-import { get } from 'lodash';
-
 const createDefaultForm = (attributes, allComponentsSchema) => {
   return Object.keys(attributes).reduce((acc, current) => {
-    const attribute = get(attributes, [current], {});
+    const attribute = attributes?.[current] ?? {};
     const { default: defaultValue, component, type, required, min, repeatable } = attribute;
 
     if (type === 'json') {
@@ -18,7 +16,7 @@ const createDefaultForm = (attributes, allComponentsSchema) => {
     }
 
     if (type === 'component') {
-      const currentComponentSchema = get(allComponentsSchema, [component, 'attributes'], {});
+      const currentComponentSchema = allComponentsSchema?.[component]?.attributes ?? {};
       const currentComponentDefaultForm = createDefaultForm(
         currentComponentSchema,
         allComponentsSchema

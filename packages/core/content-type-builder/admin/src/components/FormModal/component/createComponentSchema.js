@@ -1,5 +1,4 @@
 import * as yup from 'yup';
-import { toLower, trim } from 'lodash';
 import { translatedErrors as errorsTrads } from '@strapi/helper-plugin';
 import getTrad from '../../../utils/getTrad';
 import { createComponentUid } from '../utils/createUid';
@@ -30,7 +29,7 @@ const createComponentSchema = (usedComponentNames, reservedNames, category) => {
             return false;
           }
 
-          return !reservedNames.includes(toLower(trim(value)));
+          return !reservedNames.includes(value.trim().toLowerCase());
         },
       })
       .required(errorsTrads.required),

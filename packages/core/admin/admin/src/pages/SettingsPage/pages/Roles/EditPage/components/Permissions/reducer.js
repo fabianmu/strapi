@@ -1,5 +1,9 @@
 import produce from 'immer';
-import { cloneDeep, has, isObject, get, set } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import get from 'lodash/get';
+import isObject from 'lodash/isObject';
+import set from 'lodash/set';
+
 import updateConditionsToFalse from './utils/updateConditionsToFalse';
 import updateValues from './utils/updateValues';
 
@@ -53,7 +57,7 @@ const reducer = (state, action) =>
           // When a ct has multiple properties (ex: locales, field)
           // We need to make sure that we add any new property to the modifiedData
           // object.
-          if (has(objToUpdate[actionId], `properties.${propertyName}`)) {
+          if (objToUpdate[actionId]?.properties?.[propertyName]) {
             const objValue = get(objToUpdate, [actionId, 'properties', propertyName, rowName]);
             const pathToDataToSet = [
               ...pathToModifiedDataCollectionType,

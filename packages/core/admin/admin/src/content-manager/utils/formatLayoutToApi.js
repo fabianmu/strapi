@@ -1,5 +1,3 @@
-import { omit, get } from 'lodash';
-
 const formatLayoutToApi = ({ layouts, metadatas, ...rest }) => {
   const list = layouts.list.map((obj) => {
     if (obj.name) {
@@ -9,8 +7,11 @@ const formatLayoutToApi = ({ layouts, metadatas, ...rest }) => {
     return obj;
   });
   const formattedMetadatas = Object.keys(metadatas).reduce((acc, current) => {
-    const currentMetadatas = get(metadatas, [current], {});
+    const currentMetadatas = metadatas?.[current] ?? {};
     let editMetadatas = currentMetadatas.edit;
+    const {
+      list: { mainField, ...listMetadatas },
+    } = currentMetadatas;
 
     if (editMetadatas.mainField) {
       editMetadatas = { ...editMetadatas, mainField: currentMetadatas.edit.mainField.name };
@@ -20,7 +21,7 @@ const formatLayoutToApi = ({ layouts, metadatas, ...rest }) => {
       ...acc,
       [current]: {
         edit: editMetadatas,
-        list: omit(currentMetadatas.list, ['mainField']),
+        list: listMetadatas,
       },
     };
   }, {});

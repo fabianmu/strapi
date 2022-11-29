@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { get, take } from 'lodash';
+import take from 'lodash/take';
 import { useCMEditViewDataManager } from '@strapi/helper-plugin';
 
 import { getFieldName } from '../../../utils';
@@ -20,10 +20,9 @@ function useSelect({ isFromDynamicZone, name }) {
 
   // This is used for the readonly mode when updating an entry
   const allDynamicZoneFields = useMemo(() => {
-    const attributes = get(contentType, ['attributes'], {});
-
+    const attributes = contentType?.attributes ?? {};
     const dynamicZoneFields = Object.keys(attributes).filter((attrName) => {
-      return get(attributes, [attrName, 'type'], '') === 'dynamiczone';
+      return (attributes?.[attrName]?.type ?? '') === 'dynamiczone';
     });
 
     return dynamicZoneFields;
@@ -33,7 +32,7 @@ function useSelect({ isFromDynamicZone, name }) {
     return isCreatingEntry ? createActionAllowedFields : updateActionAllowedFields;
   }, [isCreatingEntry, createActionAllowedFields, updateActionAllowedFields]);
 
-  const componentValue = get(modifiedData, name, null);
+  const componentValue = modifiedData?.[name] ?? null;
   const compoName = useMemo(() => {
     return getFieldName(name);
   }, [name]);

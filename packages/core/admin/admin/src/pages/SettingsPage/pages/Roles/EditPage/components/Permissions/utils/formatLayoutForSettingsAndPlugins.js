@@ -1,23 +1,23 @@
-import { chain } from 'lodash';
+import groupBy from 'lodash/groupBy';
 
 const replaceName = (name) => name.split(' ').join('-');
 
 const formatLayout = (layout, groupByKey) => {
-  return chain(layout)
-    .groupBy(groupByKey)
-    .map((item, itemName) => ({
-      category: itemName,
-      categoryId: replaceName(itemName),
-      childrenForm: chain(item)
-        .groupBy('subCategory')
-        .map((actions, subCategoryName) => ({
-          subCategoryName,
-          subCategoryId: replaceName(subCategoryName),
-          actions,
-        }))
-        .value(),
-    }))
-    .value();
+  const grouped = groupBy(layout, groupByKey);
+
+  return Object.entries(grouped).map(([key, entry]) => {
+    const groupedByCategory = groupBy(entry, 'subCategory');
+
+    return {
+      category: key,
+      categoryId: replaceName(key),
+      childrenForm: Object.entries(groupedByCategory).map(([subCategoryName, actions]) => ({
+        subCategoryName,
+        subCategoryId: replaceName(subCategoryName),
+        actions,
+      })),
+    };
+  });
 };
 
 export default formatLayout;

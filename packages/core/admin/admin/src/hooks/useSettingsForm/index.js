@@ -1,6 +1,5 @@
 import { useEffect, useReducer } from 'react';
 import { request, useNotification, useOverlayBlocker } from '@strapi/helper-plugin';
-import { get, has, omit } from 'lodash';
 import { checkFormValidity, formatAPIErrors } from '../../utils';
 import { initialState, reducer } from './reducer';
 import init from './init';
@@ -79,7 +78,7 @@ const useSettingsForm = (endPoint, schema, cbSuccess, fieldsToPick) => {
           type: 'ON_SUBMIT',
         });
 
-        const cleanedData = omit(modifiedData, ['confirmPassword', 'registrationToken']);
+        const { confirmPassword, registrationToken, ...cleanedData } = modifiedData;
 
         if (cleanedData.roles) {
           cleanedData.roles = cleanedData.roles.map((role) => role.id);
@@ -102,9 +101,9 @@ const useSettingsForm = (endPoint, schema, cbSuccess, fieldsToPick) => {
           message: { id: 'notification.success.saved' },
         });
       } catch (err) {
-        const data = get(err, 'response.payload', { data: {} });
+        const data = err?.response?.payload ?? { data: {} };
 
-        if (has(data, 'data') && typeof data.data === 'string') {
+        if (typeof data?.data === 'string') {
           toggleNotification({
             type: 'warning',
             message: data.data,

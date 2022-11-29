@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useMutation } from 'react-query';
 import isEqual from 'lodash/isEqual';
 import upperFirst from 'lodash/upperFirst';
-import pick from 'lodash/pick';
 import get from 'lodash/get';
 import { stringify } from 'qs';
 import { useNotification, useTracking, ConfirmDialog, Link } from '@strapi/helper-plugin';
@@ -72,8 +71,8 @@ const ListSettingsView = ({ layout, slug }) => {
   };
 
   const handleConfirm = async () => {
-    const body = pick(modifiedData, ['layouts', 'settings', 'metadatas']);
-    submitMutation.mutate(body);
+    const { layouts, settings, metadatas } = modifiedData;
+    submitMutation.mutate({ layouts, settings, metadatas });
   };
 
   const handleAddField = (item) => {

@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from 'react';
-import { get } from 'lodash';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Box } from '@strapi/design-system/Box';
@@ -24,7 +23,7 @@ const SubCategory = ({ subCategory }) => {
     useUsersPermissions();
 
   const currentScopedModifiedData = useMemo(() => {
-    return get(modifiedData, subCategory.name, {});
+    return modifiedData?.[subCategory.name] ?? {};
   }, [modifiedData, subCategory]);
 
   const hasAllActionsSelected = useMemo(() => {
@@ -83,7 +82,7 @@ const SubCategory = ({ subCategory }) => {
               <GridItem col={6} key={action.name}>
                 <CheckboxWrapper isActive={isActionSelected(action.name)} padding={2} hasRadius>
                   <Checkbox
-                    value={get(modifiedData, name, false)}
+                    value={modifiedData?.[name] ?? false}
                     name={name}
                     onValueChange={(value) => onChange({ target: { name, value } })}
                   >

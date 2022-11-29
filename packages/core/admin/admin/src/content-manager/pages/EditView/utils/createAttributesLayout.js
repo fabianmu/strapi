@@ -1,4 +1,4 @@
-import { get, isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 
 const createAttributesLayout = (currentContentTypeLayoutData) => {
   if (!currentContentTypeLayoutData.layouts) {
@@ -8,7 +8,7 @@ const createAttributesLayout = (currentContentTypeLayoutData) => {
   const currentLayout = currentContentTypeLayoutData.layouts.edit;
   const attributes = currentContentTypeLayoutData.attributes;
 
-  const getType = (name) => get(attributes, [name, 'type'], '');
+  const getType = (name) => attributes?.[name]?.type ?? '';
 
   let currentRowIndex = 0;
   const newLayout = [];

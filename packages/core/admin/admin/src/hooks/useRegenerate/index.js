@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { get } from 'lodash';
 import { useNotification } from '@strapi/helper-plugin';
 import { axiosInstance } from '../../core/utils';
 
@@ -20,7 +19,7 @@ const useRegenerate = (id, onRegenerate) => {
       setIsLoadingConfirmation(false);
       toggleNotification({
         type: 'warning',
-        message: get(error, 'response.data.message', 'notification.error'),
+        message: error?.response?.data?.message ?? 'notification.error',
       });
     }
   };

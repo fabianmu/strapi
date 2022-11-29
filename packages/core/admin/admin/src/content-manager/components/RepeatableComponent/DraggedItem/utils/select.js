@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { get, toString } from 'lodash';
+import get from 'lodash/get';
 import { useCMEditViewDataManager } from '@strapi/helper-plugin';
 
 function useSelect({ schema, componentFieldName }) {
@@ -12,9 +12,7 @@ function useSelect({ schema, componentFieldName }) {
   } = useCMEditViewDataManager();
 
   const mainField = useMemo(() => get(schema, ['settings', 'mainField'], 'id'), [schema]);
-  const displayedValue = toString(
-    get(modifiedData, [...componentFieldName.split('.'), mainField], '')
-  );
+  const displayedValue = `${get(modifiedData, [...componentFieldName.split('.'), mainField], '')}`;
 
   return {
     displayedValue,

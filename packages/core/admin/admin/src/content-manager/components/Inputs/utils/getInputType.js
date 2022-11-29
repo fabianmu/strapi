@@ -1,7 +1,5 @@
-import { toLower } from 'lodash';
-
 const getInputType = (type = '') => {
-  switch (toLower(type)) {
+  switch (type.toLowerCase()) {
     case 'boolean':
       return 'bool';
     case 'biginteger':

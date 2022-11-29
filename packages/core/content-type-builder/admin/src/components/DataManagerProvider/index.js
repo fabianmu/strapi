@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { get, groupBy, set, size } from 'lodash';
+import groupBy from 'lodash/groupBy';
+import set from 'lodash/set';
 import {
   LoadingIndicatorPage,
   useTracking,
@@ -90,8 +91,8 @@ const DataManagerProvider = ({
   const isInContentTypeView = contentTypeMatch !== null;
   const firstKeyToMainSchema = isInContentTypeView ? 'contentType' : 'component';
   const currentUid = isInContentTypeView
-    ? get(contentTypeMatch, 'params.uid', null)
-    : get(componentMatch, 'params.componentUid', null);
+    ? contentTypeMatch?.params?.uid ?? null
+    : componentMatch?.params?.componentUid ?? null;
 
   const getDataRef = useRef();
   const endPoint = isInContentTypeView ? 'content-types' : 'components';
@@ -290,7 +291,7 @@ const DataManagerProvider = ({
   const deleteData = async () => {
     try {
       const requestURL = `/${endPoint}/${currentUid}`;
-      const isTemporary = get(modifiedData, [firstKeyToMainSchema, 'isTemporary'], false);
+      const isTemporary = modifiedData?.[firstKeyToMainSchema]?.isTemporary ?? false;
       // eslint-disable-next-line no-alert
       const userConfirm = window.confirm(
         formatMessage({
@@ -377,9 +378,9 @@ const DataManagerProvider = ({
     // Since we apply the modification of a specific component only in the modified data
     // we need to update all compos with the modifications
     if (!isInContentTypeView) {
-      const currentEditedCompo = get(modifiedData, 'component', {});
+      const currentEditedCompo = modifiedData?.component ?? {};
 
-      set(allCompos, get(currentEditedCompo, ['uid'], ''), currentEditedCompo);
+      set(allCompos, currentEditedCompo?.uid ?? '', currentEditedCompo);
     }
 
     const composWithCompos = retrieveComponentsThatHaveComponents(allCompos);
@@ -404,9 +405,9 @@ const DataManagerProvider = ({
 
   const setModifiedData = () => {
     const currentSchemas = isInContentTypeView ? contentTypes : components;
-    const schemaToSet = get(currentSchemas, currentUid, {
+    const schemaToSet = currentSchemas?.[currentUid] ?? {
       schema: { attributes: [] },
-    });
+    };
 
     const retrievedComponents = retrieveComponentsFromSchema(
       schemaToSet.schema.attributes,
@@ -421,8 +422,7 @@ const DataManagerProvider = ({
     );
 
     const hasJustCreatedSchema =
-      get(schemaToSet, 'isTemporary', false) &&
-      size(get(schemaToSet, 'schema.attributes', [])) === 0;
+      (schemaToSet?.isTemporary ?? false) && (schemaToSet?.schema?.attributes ?? []).length === 0;
 
     dispatch({
       type: SET_MODIFIED_DATA,
@@ -443,10 +443,10 @@ const DataManagerProvider = ({
 
   const redirectEndpoint = useMemo(() => {
     const allowedEndpoints = Object.keys(contentTypes)
-      .filter((uid) => get(contentTypes, [uid, 'schema', 'visible'], true))
+      .filter((uid) => contentTypes?.[uid]?.schema?.visible ?? true)
       .sort();
 
-    return get(allowedEndpoints, '0', 'create-content-type');
+    return allowedEndpoints?.['0'] ?? 'create-content-type';
   }, [contentTypes]);
 
   if (shouldRedirect) {
@@ -455,8 +455,7 @@ const DataManagerProvider = ({
 
   const submitData = async (additionalContentTypeData) => {
     try {
-      const isCreating = get(modifiedData, [firstKeyToMainSchema, 'isTemporary'], false);
-
+      const isCreating = modifiedData?.[firstKeyToMainSchema]?.isTemporary ?? false;
       const body = {
         components: getComponentsToPost(
           modifiedData.components,
@@ -531,8 +530,8 @@ const DataManagerProvider = ({
       if (isInContentTypeView) {
         trackUsage('didSaveContentType');
 
-        const oldName = get(body, ['contentType', 'schema', 'name'], '');
-        const newName = get(initialData, ['contentType', 'schema', 'name'], '');
+        const oldName = body?.contentType?.schema?.name ?? '';
+        const newName = initialData?.contentType?.schema?.name ?? '';
 
         if (!isCreating && oldName !== newName) {
           trackUsage('didEditNameOfContentType');

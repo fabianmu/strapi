@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef } from 'react';
 import { request, useNotification } from '@strapi/helper-plugin';
-import { get } from 'lodash';
+
 import init from './init';
 import pluginId from '../../pluginId';
 import reducer, { initialState } from './reducer';
@@ -40,7 +40,7 @@ const useRolesList = (shouldFetchData = true) => {
         data: roles,
       });
     } catch (err) {
-      const message = get(err, ['response', 'payload', 'message'], 'An error occured');
+      const message = err?.response?.payload?.message ?? 'An error occured';
 
       if (isMounted.current) {
         dispatch({
