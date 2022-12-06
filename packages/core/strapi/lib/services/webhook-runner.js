@@ -67,16 +67,18 @@ class WebhookRunner {
 
     for (const webhook of activeWebhooks) {
       await this.run(webhook, event, info).catch((error) => {
-        if (info.model !== 'availability') {
-          this.logger.error('Error running webhook');
-          this.logger.error(error);
-        }
+        this.logger.error('Error running webhook');
+        this.logger.error(error);
       });
     }
   }
 
   run(webhook, event, info = {}) {
     const { url, headers } = webhook;
+
+    if (info.model === 'availability') {
+      return;
+    }
 
     return fetch(url, {
       method: 'post',
